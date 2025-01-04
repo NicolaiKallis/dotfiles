@@ -1,8 +1,8 @@
 // -*- mode: jsonc -*-
 {
-    // "layer": "top", // Waybar at top layer
-    // "position": "bottom", // Waybar position (top|bottom|left|right)
-    "height": 30, // Waybar height (to be removed for auto height)
+    "layer": "top", // Waybar at top layer
+    "position": "top", // Waybar position (top|bottom|left|right)
+    "height": 25, // Waybar height (to be removed for auto height)
     // "width": 1280, // Waybar width
     "spacing": 4, // Gaps between modules (4px)
     // Choose the order of the modules
@@ -13,13 +13,13 @@
 	"hyprland/workspaces",
         "custom/media"
     ],
-    "modules-center": [
-	"hyprland/window"
-        // "sway/window"
-    ],
+    //"modules-center": [
+    //    // "hyprland/window"
+    //    // "sway/window"
+    //],
     "modules-right": [
         "mpd",
-        "idle_inhibitor",
+        //"idle_inhibitor",
         "pulseaudio",
         "network",
         "power-profiles-daemon",
@@ -27,13 +27,13 @@
         "memory",
         "temperature",
         "backlight",
-        "keyboard-state",
+        //"keyboard-state",
         // "sway/language",
-	"hyprland/language",
+	//"hyprland/language",
         "battery",
-        "battery#bat2",
+        //"battery#bat2",
         "clock",
-        "tray",
+        //"tray",
         "custom/power"
     ],
     // Modules configuration
@@ -53,15 +53,15 @@
     //         "default": ""
     //     }
     // },
-    "keyboard-state": {
-        "numlock": true,
-        "capslock": true,
-        "format": "{name} {icon}",
-        "format-icons": {
-            "locked": "",
-            "unlocked": ""
-        }
-    },
+    // "keyboard-state": {
+    //     "numlock": true,
+    //     "capslock": true,
+    //     "format": "{name} {icon}",
+    //     "format-icons": {
+    //         "locked": "",
+    //         "unlocked": ""
+    //     }
+    // },
     "sway/mode": {
         "format": "<span style=\"italic\">{}</span>"
     },
@@ -110,9 +110,9 @@
         "spacing": 10
     },
     "clock": {
-        // "timezone": "America/New_York",
+        "timezone": "Europe/Berlin",
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
-        "format-alt": "{:%Y-%m-%d}"
+        "format-alt": "{:%d-%m-%Y}"
     },
     "cpu": {
         "format": "{usage}% ",
