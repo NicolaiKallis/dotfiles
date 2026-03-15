@@ -6,9 +6,12 @@ return {
 
 		configs.setup({
 			ensure_installed = {
+				"ada",
 				"c",
+				"css",
 				"cpp",
 				"dockerfile",
+				"html",
 				"lua",
 				"python",
 				"rust",
