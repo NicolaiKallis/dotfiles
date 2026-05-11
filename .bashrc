@@ -16,3 +16,9 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 . "$HOME/.cargo/env"
+powerline-daemon -q
+alias code="code --ozone-platform=wayland"
+alias obsidian="OBSIDIAN_USE_WAYLAND=1 obsidian --enable-features=UseOzonePlatform --ozone-platform=wayland"
+
+export XDG_CONFIG_HOME="$HOME/.config"
+
