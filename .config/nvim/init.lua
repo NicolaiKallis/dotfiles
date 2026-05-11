@@ -18,6 +18,7 @@ vim.opt.termguicolors = true
 vim.opt.scrolloff = 8
 vim.opt.sidescrolloff = 8
 vim.opt.wrap = false
+vim.opt.fillchars:append({ eob = " " })
 
 -- Search
 vim.opt.ignorecase = true
