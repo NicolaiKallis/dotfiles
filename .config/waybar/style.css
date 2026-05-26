@@ -1,11 +1,11 @@
 * {
     /* `otf-font-awesome` is required to be installed for icons */
     font-family: FontAwesome, Roboto, Helvetica, Arial, sans-serif;
-    font-size: 13px;
+    font-size: 12px;
 }
 
 window#waybar {
-    background-color: rgba(43, 48, 59, 0.5);
+    background-color: rgba(43, 48, 59, 0.8);
     border-bottom: 3px solid rgba(100, 114, 125, 0.5);
     color: #ffffff;
     transition-property: background-color;
@@ -183,6 +183,26 @@ label:focus {
 
 #backlight {
     background-color: #90b1b1;
+}
+
+#backlight-slider slider {
+    min-height: 100px;
+    min-width: 100px;
+    opacity: 0;
+    background-image: none;
+    border: none;
+    box-shadow: none;
+}
+#backlight-slider trough {
+    min-height: 80px;
+    min-width: 10px;
+    border-radius: 5px;
+    background-color: black;
+}
+#backlight-slider highlight {
+    min-width: 10px;
+    border-radius: 5px;
+    background-color: red;
 }
 
 #network {
