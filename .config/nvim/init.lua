@@ -1,4 +1,5 @@
 require("config.lazy")
+require("core.mappings")
 
 -- Line numbers
 vim.opt.number = true
