@@ -1,5 +1,4 @@
 require("config.lazy")
-require("lazy").setup("plugins")
 
 -- Line numbers
 vim.opt.number = true
