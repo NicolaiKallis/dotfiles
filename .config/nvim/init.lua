@@ -14,6 +14,7 @@ vim.opt.smartindent = true
 vim.opt.signcolumn = "yes"
 vim.opt.cursorline = true
 vim.opt.termguicolors = true
+vim.opt.cmdheight = 0
 vim.opt.scrolloff = 8
 vim.opt.sidescrolloff = 8
 vim.opt.wrap = false
