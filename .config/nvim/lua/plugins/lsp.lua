@@ -16,9 +16,9 @@ return {
         require("cmp_nvim_lsp").default_capabilities()
       )
 
-      local servers = { "lua_ls", "pyright", "html", "cssls", "ts_ls", "clangd" }
+      local lsp_servers = require("config.lsp_servers")
 
-      for _, server in ipairs(servers) do
+      for _, server in ipairs(lsp_servers.mason) do
         vim.lsp.config[server] = { capabilities = capabilities }
         vim.lsp.enable(server)
       end
@@ -35,7 +35,6 @@ return {
           },
         },
       }
-      vim.lsp.enable("rust_analyzer")
 
       -- LSP keybindings (only active when LSP is attached)
       vim.api.nvim_create_autocmd("LspAttach", {
@@ -71,12 +70,12 @@ return {
 
           -- Enable inlay hints by default
           local client = vim.lsp.get_client_by_id(ev.data.client_id)
-          if client and client.supports_method("textDocument/inlayHint") then
+          if client and client:supports_method("textDocument/inlayHint") then
             vim.lsp.inlay_hint.enable(true, { bufnr = ev.buf })
           end
 
           -- Format on save
-          if client and client.supports_method("textDocument/formatting") then
+          if client and client:supports_method("textDocument/formatting") then
             vim.api.nvim_create_autocmd("BufWritePre", {
               group = vim.api.nvim_create_augroup("LspFormat." .. ev.buf, { clear = true }),
               buffer = ev.buf,
@@ -95,8 +94,10 @@ return {
         filetypes = { "ada", "adb", "ads", "gpr" },
         root_markers = { "alire.toml", ".git", "*.gpr" },
       }
-      vim.lsp.enable("ada_ls")
 
+      for _, server in ipairs(lsp_servers.manual) do
+        vim.lsp.enable(server)
+      end
     end,
   },
 }
