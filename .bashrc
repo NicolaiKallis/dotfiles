@@ -22,3 +22,5 @@ alias obsidian="OBSIDIAN_USE_WAYLAND=1 obsidian --enable-features=UseOzonePlatfo
 
 export XDG_CONFIG_HOME="$HOME/.config"
 
+# official repo explicitly states that this needs to be at the end of .bashrc
+eval "$(zoxide init bash)"
