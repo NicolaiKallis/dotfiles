@@ -1,6 +1,12 @@
 require("config.lazy")
 require("core.mappings")
 
+vim.filetype.add({
+    extension = {
+        tpp = "cpp",
+    },
+})
+
 -- Line numbers
 vim.opt.number = true
 vim.opt.relativenumber = true
