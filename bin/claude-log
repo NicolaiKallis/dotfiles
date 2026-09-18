@@ -1,0 +1,93 @@
+#!/usr/bin/env bash
+# Render a Claude Code session transcript as readable Markdown.
+#
+# Claude Code repaints its viewport instead of streaming lines, so nothing it
+# prints ever reaches tmux's scrollback -- `prefix [` shows an almost empty
+# buffer no matter how tall the window is or what history-limit says. The full
+# conversation is on disk though, as JSONL, and this turns it back into prose.
+#
+#   claude-log            newest session for the current directory, in nvim
+#   claude-log -p         print to stdout instead (pipe it, grep it)
+#   claude-log -l         list this directory's sessions, newest first
+#   claude-log -a         include tool calls, not just the conversation
+#   claude-log <file>     a specific transcript
+#
+# Sessions are keyed by working directory: /root/code/HyRAIL becomes
+# ~/.claude/projects/-root-code-HyRAIL/<session-uuid>.jsonl
+set -euo pipefail
+
+PRINT=0
+LIST=0
+ALL=0
+FILE=""
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -p|--print) PRINT=1 ;;
+    -l|--list)  LIST=1 ;;
+    -a|--all)   ALL=1 ;;
+    -h|--help)  sed -n '2,18p' "$0" | sed 's/^# \?//'; exit 0 ;;
+    *)          FILE="$1" ;;
+  esac
+  shift
+done
+
+# Claude Code slugifies the cwd: every / becomes -, including the leading one.
+project_dir() {
+  printf '%s/.claude/projects/%s' "$HOME" "$(pwd | sed 's|/|-|g')"
+}
+
+DIR="$(project_dir)"
+if [ ! -d "$DIR" ]; then
+  echo "No Claude sessions for $(pwd)" >&2
+  echo "(looked in $DIR)" >&2
+  exit 1
+fi
+
+if [ "$LIST" = 1 ]; then
+  ls -lt --time-style=+'%Y-%m-%d %H:%M' "$DIR"/*.jsonl 2>/dev/null \
+    | awk '{printf "%s %s  %8.1f KB  %s\n", $6, $7, $5/1024, $8}'
+  exit 0
+fi
+
+[ -n "$FILE" ] || FILE="$(ls -t "$DIR"/*.jsonl 2>/dev/null | head -1)"
+[ -n "$FILE" ] || { echo "No transcript found in $DIR" >&2; exit 1; }
+
+render() {
+  jq -r --argjson all "$( [ "$ALL" = 1 ] && echo true || echo false )" '
+    def ts: (.timestamp // "") | if . == "" then "" else .[11:16] end;
+
+    select(.type == "user" or .type == "assistant")
+    | . as $rec
+    | (.message.content // empty)
+    | if type == "string" then
+        if ($rec.type == "user" and (. | length) > 0)
+        then "\n\n## [\($rec|ts)] You\n\n" + .
+        else empty end
+      else
+        .[]?
+        | if .type == "text" and ($rec.type == "assistant") then
+            "\n\n### [\($rec|ts)] Claude\n\n" + .text
+          elif .type == "text" and ($rec.type == "user") then
+            "\n\n## [\($rec|ts)] You\n\n" + .text
+          elif .type == "tool_use" and $all then
+            "\n\n<details><summary>tool: \(.name)</summary>\n\n```json\n"
+              + (.input | tostring) + "\n```\n\n</details>"
+          else empty end
+      end
+  ' "$FILE"
+}
+
+if [ "$PRINT" = 1 ]; then
+  render
+else
+  OUT="$(mktemp --suffix=.md /tmp/claude-log-XXXXXX)"
+  {
+    echo "# Claude session"
+    echo
+    echo "\`$FILE\`"
+    render
+  } > "$OUT"
+  # -R: read-only, so a stray keystroke cannot dirty the buffer.
+  exec nvim -R "$OUT"
+fi

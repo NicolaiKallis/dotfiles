@@ -26,6 +26,9 @@
   xdg.configFile."nvim".source =
     config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/nvim";
 
+  # ~/dotfiles/bin on PATH, for small scripts that are not worth a derivation.
+  home.sessionPath = [ "${config.home.homeDirectory}/dotfiles/bin" ];
+
   # Mason's prebuilt binaries are dynamically linked against a libc layout
   # NixOS does not provide. Everything above comes from nix instead, so the
   # config skips Mason entirely (read in lua/config/options.lua).
