@@ -1,0 +1,4 @@
+# lazy.nvim installs into stdpath("data"), not here, but keep strays out.
+/lazy/
+/.luarc.json
+*.log

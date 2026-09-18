@@ -1,0 +1,8 @@
+column_width = 100
+indent_type = "Spaces"
+indent_width = 2
+quote_style = "AutoPreferDouble"
+call_parentheses = "Always"
+# Keep one-line callbacks on one line -- the keymap and autocmd tables in this
+# config read better dense than exploded across three lines each.
+collapse_simple_statement = "FunctionOnly"
