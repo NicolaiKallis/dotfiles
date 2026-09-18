@@ -50,8 +50,10 @@
   # place would silently override everything written here.
   programs.git = {
     enable = true;
-    userName = "Nicolai Kallis";
-    userEmail = "nicolai.kallis@gmx.de";
+    settings.user = {
+      name = "Nicolai Kallis";
+      email = "nicolai.kallis@gmx.de";
+    };
     ignores = [ "**/.claude/settings.local.json" ];
   };
 
