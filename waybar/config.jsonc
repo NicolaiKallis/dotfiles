@@ -1,0 +1,163 @@
+// -*- mode: jsonc -*-
+{
+    "layer": "top",
+    "position": "top",
+    "height": 24,
+    "spacing": 0,
+    "modules-left": [
+        "hyprland/workspaces"
+    ],
+
+    "modules-center": [
+        "custom/cpu-start",  "cpu",
+        "custom/mem-start",  "memory",
+        "custom/temp-start", "temperature",
+        "custom/arch-start", "custom/arch", "custom/arch-end",
+        "network",           "custom/net-end",
+        "backlight",         "custom/light-end",
+        "battery",           "custom/bat-end"
+    ],
+
+    "modules-right": [
+        "mpd",
+        "pulseaudio",
+        "backlight-slider",
+        "clock",
+        "tray"
+    ],
+    // Modules configuration
+    // Every value its own segment, each pointing away from the logo:
+    //   [<| cpu][<| mem][<| temp][<| arch |>][wlan |>][light |>][battery |>]
+    //
+    // Glyphs (Symbols Nerd Font): \ue0b2 left triangle, \ue0b0 right
+    // triangle, \uf303 Arch logo. 
+    //
+    // Waybar centres modules-center as a whole, so the logo is in the exact
+    // middle only while both sides are equally wide. style.css gives every
+    // value the same fixed width for that reason.
+    "custom/cpu-start":   { "format": "\ue0b2", "tooltip": false },
+    "custom/mem-start":   { "format": "\ue0b2", "tooltip": false },
+    "custom/temp-start":  { "format": "\ue0b2", "tooltip": false },
+    "custom/arch-start":  { "format": "\ue0b2", "tooltip": false },
+    "custom/arch":        { "format": "\uf303", "tooltip": false },
+    "custom/arch-end":    { "format": "\ue0b0", "tooltip": false },
+    "custom/net-end":     { "format": "\ue0b0", "tooltip": false },
+    "custom/light-end":   { "format": "\ue0b0", "tooltip": false },
+    "custom/bat-end":     { "format": "\ue0b0", "tooltip": false },
+
+    "mpd": {
+        "format": "{stateIcon} {consumeIcon}{randomIcon}{repeatIcon}{singleIcon}{artist} - {album} - {title} ({elapsedTime:%M:%S}/{totalTime:%M:%S}) ⸨{songPosition}|{queueLength}⸩ {volume}% ",
+        "format-disconnected": "Disconnected ",
+        "format-stopped": "{consumeIcon}{randomIcon}{repeatIcon}{singleIcon}Stopped ",
+        "unknown-tag": "N/A",
+        "interval": 5,
+        "consume-icons": {
+            "on": " "
+        },
+        "random-icons": {
+            "off": "<span color=\"#f53c3c\"></span> ",
+            "on": " "
+        },
+        "repeat-icons": {
+            "on": " "
+        },
+        "single-icons": {
+            "on": "1 "
+        },
+        "state-icons": {
+            "paused": "",
+            "playing": ""
+        },
+        "tooltip-format": "MPD (connected)",
+        "tooltip-format-disconnected": "MPD (disconnected)"
+    },
+    "idle_inhibitor": {
+        "format": "{icon}",
+        "format-icons": {
+            "activated": "",
+            "deactivated": ""
+        }
+    },
+    "tray": {
+        // "icon-size": 21,
+        "spacing": 10
+    },
+    "clock": {
+        "timezone": "Europe/Berlin",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+        "format-alt": "{:%d-%m-%Y}"
+    },
+    "cpu": {
+        "format": "{usage}% ",
+        "tooltip": false
+    },
+    "memory": {
+        "format": "{}% "
+    },
+    "temperature": {
+        // "thermal-zone": 2,
+        // "hwmon-path": "/sys/class/hwmon/hwmon2/temp1_input",
+        "critical-threshold": 80,
+        // "format-critical": "{temperatureC}°C {icon}",
+        "format": "{temperatureC}°C {icon}",
+        "format-icons": ["", "", ""]
+    },
+    "backlight": {
+        "device": "intel_backlight",
+        "format": "{percent}% {icon}",
+        "format-icons": ["", "", "", "", "", "", "", "", ""]
+    },
+    "backlight-slider": {
+	"min": 0,
+	"max": 100,
+	"orientation": "horizontal",
+	"device": "intel_backlight"
+    },
+    "battery": {
+        "states": {
+            // "good": 95,
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{capacity}% {icon}",
+        "format-full": "{capacity}% {icon}",
+        "format-charging": "{capacity}% ",
+        "format-plugged": "{capacity}% ",
+        "format-alt": "{time} {icon}",
+        // "format-good": "", // An empty format will hide the module
+        // "format-full": "",
+        "format-icons": ["", "", "", "", ""]
+    },
+    "battery#bat2": {
+        "bat": "BAT2"
+    },
+    "network": {
+        // "interface": "wlp2*", // (Optional) To force the use of this interface
+	"format-wifi": "{signalStrength}% ",
+        //"format-wifi": "{essid} ({signalStrength}%) ",
+        "format-ethernet": "{ipaddr}/{cidr} ",
+        "tooltip-format": "{ifname} via {gwaddr} ",
+        "format-linked": "{ifname} (No IP) ",
+        "format-disconnected": "Disconnected ⚠",
+        "format-alt": "{ifname}: {ipaddr}/{cidr}"
+    },
+    "pulseaudio": {
+        // "scroll-step": 1, // %, can be a float
+        "format": "{volume}% {icon} {format_source}",
+        "format-bluetooth": "{volume}% {icon} {format_source}",
+        "format-bluetooth-muted": " {icon} {format_source}",
+        "format-muted": " {format_source}",
+        "format-source": "{volume}% ",
+        "format-source-muted": "",
+        "format-icons": {
+            "headphone": "",
+            "hands-free": "",
+            "headset": "",
+            "phone": "",
+            "portable": "",
+            "car": "",
+            "default": ["", "", ""]
+        },
+        "on-click": "pavucontrol"
+    },
+}
