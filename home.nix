@@ -40,6 +40,13 @@
   # binding in a second syntax for no gain.
   xdg.configFile."tmux/tmux.conf".source =
     config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/tmux/tmux.conf";
+  # nixpkgs tmuxPlugins.tmux-powerline, pinned by flake.lock.
+  xdg.configFile."tmux/plugins/powerline".source =
+    "${pkgs.tmuxPlugins.tmux-powerline}/share/tmux-plugins/powerline";
+  # The plugin reads $XDG_CONFIG_HOME/tmux-powerline/config.sh. Symlinked into the repo so
+  # theme and segment edits are live and show up as diffs.
+  xdg.configFile."tmux-powerline".source =
+    config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/tmux-powerline";
 
   # ── git ─────────────────────────────────────────────────────────────────
   # Generated, not symlinked: this is the case where the Nix module earns its

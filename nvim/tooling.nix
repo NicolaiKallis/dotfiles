@@ -30,7 +30,7 @@ with pkgs;
 
   # ── Formatters ───────────────────────────────────────────────────
   # Matching lua/plugins/format.lua.
-  nixfmt-rfc-style # nix — the style flake.nix is already written in
+  nixfmt # nix — the style flake.nix is already written in
   stylua # lua
   prettier # ts/tsx/json/css/html/md, when a package has no local copy
 
