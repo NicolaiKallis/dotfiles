@@ -1,0 +1,44 @@
+#
+# ~/.bashrc  —  managed by home-manager (symlinked from ~/dotfiles/bash/bashrc)
+#
+
+# home-manager's session variables and PATH additions (home.sessionPath,
+# home.sessionVariables). Sourced ABOVE the interactive guard on purpose: a
+# non-interactive shell still needs ~/dotfiles/bin on PATH and NVIM_USE_MASON
+# set. Home Manager injects this itself into a bashrc it generates; this one is
+# symlinked, so the line is written by hand.
+if [ -f "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
+  . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+fi
+
+# If not running interactively, don't do anything
+[[ $- != *i* ]] && return
+
+PS1='\e[1;32m\u@\e0\e[0;34m\h\e0: \e[0;36m\W\e0\e[0;37m \$ '
+
+alias ls='ls --color=auto'
+alias grep='grep --color=auto'
+
+# The dotfiles repo is an ordinary git repo at ~/dotfiles now, driven by
+# home-manager. The old bare-repo-over-$HOME setup lives on only as the
+# `legacy-bare-master` branch inside it (and in ~/.dotfiles, kept read-only).
+alias dotfiles='git -C "$HOME/dotfiles"'
+alias hms='home-manager switch --flake "$HOME/dotfiles#nak"'
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+. "$HOME/.cargo/env"
+powerline-daemon -q
+alias code="code --ozone-platform=wayland"
+alias obsidian="OBSIDIAN_USE_WAYLAND=1 obsidian --enable-features=UseOzonePlatform --ozone-platform=wayland"
+
+export XDG_CONFIG_HOME="$HOME/.config"
+
+# direnv: programs.direnv only injects this hook into a bashrc it generates
+# itself, so it is written here explicitly.
+command -v direnv >/dev/null && eval "$(direnv hook bash)"
+
+# official repo explicitly states that this needs to be at the end of .bashrc
+eval "$(zoxide init bash)"

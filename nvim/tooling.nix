@@ -38,10 +38,37 @@ with pkgs;
   ripgrep # telescope find_files and live_grep
   fd
   fzf
-  gnumake # telescope-fzf-native, LuaSnip's jsregexp
-  gcc
   tree-sitter # REQUIRED by nvim-treesitter's `main` branch (>= 0.26.1)
   lazygit # <leader>gg
-  curl
-  gnutar
 ]
+
+# ── Deliberately NOT here: the host toolchain ──────────────────────
+#
+# gcc, gnumake, curl and gnutar were in this list and have been removed,
+# for the same reason rust-analyzer was never in it: on a non-NixOS distro
+# `home.packages` lands in ~/.nix-profile/bin, which sits AHEAD of /usr/bin
+# on PATH. Adding gcc therefore replaced the host toolchain for this user --
+# gcc/cc/c++/cpp plus all of binutils (ld, as, ar, objcopy, readelf, strip,
+# nm, ...), 40 shadowed binaries in total.
+#
+# That is not a cosmetic difference. The nixpkgs gcc is wrapped to look in
+# the store for headers and libraries and does not read /usr/include, so
+# anything that builds against an Arch-installed library stops compiling:
+#
+#   $ gcc usb.c -lusb-1.0            # nix gcc, first on PATH
+#   fatal error: libusb-1.0/libusb.h: No such file or directory
+#   $ /usr/bin/gcc usb.c -lusb-1.0   # Arch gcc
+#   (builds and runs)
+#
+# which is exactly the path every -sys crate takes, since cc-rs picks up
+# whatever `cc` is on PATH -- probe-rs, esp-idf host tools, and any cargo
+# build with a native dependency.
+#
+# Arch already ships all four, at equal or newer versions (gcc 16.2.1 vs
+# nixpkgs 15.3.0; make 4.4.1, curl 8.22.0 and tar 1.35 are identical), so
+# nothing is lost. tree-sitter stays because Arch has no package for it, and
+# it only shells out to whatever `cc` it finds -- which is now the right one.
+#
+# If a project needs a pinned compiler, it belongs in that project's
+# devShell, reached through the direnv integration in ../home.nix, not in
+# the user profile.

@@ -1,9 +1,8 @@
 # The user environment, declaratively.
 #
-# Scope today is deliberately small: the editor and the tools it needs. Nothing
-# that already works (zsh/oh-my-zsh, git, tmux, lazygit) has been taken over
-# yet — moving those in is a separate, reversible step each time. See the end of
-# this file for where they go.
+# Scope: the editor and its tooling, the shell rc, and the Hyprland desktop
+#
+# See the end of this file for what is still unmanaged.
 { config, pkgs, ... }:
 
 {
@@ -60,7 +59,15 @@
       name = "Nicolai Kallis";
       email = "nicolai.kallis@gmx.de";
     };
-    ignores = [ "**/.claude/settings.local.json" ];
+    # Carried over from this machine's ~/.gitconfig, which had no counterpart
+    # in the incoming config. The e-mail also came from there: it collided with
+    # the incoming nicolai.kallis@meanwave.com, and this one was kept on
+    # request, so it is the one exception to "incoming wins".
+    settings.credential.helper = "store";
+    ignores = [
+      "**/.claude/settings.local.json"
+      "*.codex" # was already in this machine's ~/.config/git/ignore
+    ];
   };
 
   # ── direnv ──────────────────────────────────────────────────────────────
@@ -93,16 +100,42 @@
   xdg.configFile."htop/htoprc".source =
     config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/htop/htoprc";
 
+  # ── Hyprland / waybar / kitty ───────────────────────────────────────────
+  # Whole directories rather than single files
+  xdg.configFile."hypr".source =
+    config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/hypr";
+
+  xdg.configFile."waybar".source =
+    config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/waybar";
+
+  xdg.configFile."kitty".source =
+    config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/kitty";
+
+  # ── bash ────────────────────────────────────────────────────────────────
+  # Symlinked, not `programs.bash`: the file is a working Arch .bashrc with
+  # nvm, cargo, powerline and a zoxide init that must stay last, and
+  # re-expressing that as initExtra buys nothing.
+  #
+  # The cost of not using `programs.bash` is that Home Manager cannot inject
+  # into it, so two lines are written by hand in bash/bashrc: the
+  # hm-session-vars.sh source (which is what makes home.sessionPath and
+  # home.sessionVariables above take effect) and the direnv hook.
+  home.file.".bashrc".source =
+    config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/bash/bashrc";
+
   # Lets `home-manager` itself be run without `nix run`.
   programs.home-manager.enable = true;
 
-  # Next candidates, in rough order of how little they will hurt to move:
+  # Still outside this file, in rough order of how little they will hurt to
+  # move:
   #
-  #   programs.git      -> ~/.config/git
-  #   programs.lazygit  -> ~/.config/lazygit
-  #   programs.tmux     -> ~/.config/tmux
-  #   programs.direnv   -> replaces the hand-written hook in ~/.zshrc
-  #   programs.zsh      -> last; oh-my-zsh works and is the most disruptive
+  #   programs.bash     -> would replace the symlink above and let Home
+  #                        Manager inject the hm-session-vars and direnv
+  #                        hooks instead of bash/bashrc doing it by hand
+  #   ~/.zshrc          -> a two-line stub on this machine; bash is the login
+  #                        shell, so there is nothing urgent here
+  #   hyprpaper/hyprlock -> typed modules exist, but the confs are already
+  #                        written and commented
   #
   # Each is `programs.<x>.enable = true;` plus its settings, or the same
   # mkOutOfStoreSymlink trick if you would rather keep the dotfile verbatim.
