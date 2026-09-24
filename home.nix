@@ -7,8 +7,7 @@
 { config, pkgs, ... }:
 
 {
-  home.username = "root";
-  home.homeDirectory = "/root";
+  # home.username and home.homeDirectory are set per machine in flake.nix.
 
   # The Home Manager release this config was written against. It pins
   # backwards-compatible defaults; do not bump it casually.
